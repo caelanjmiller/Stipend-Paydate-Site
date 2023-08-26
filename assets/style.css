@@ -2,19 +2,12 @@
     box-sizing: border-box;
 }
 
-body {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-}
-
 #page-footer{
-    margin-top: auto;
     background-color: #78c2ad;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 16px;
+    font-size: 1 rem;
     text-align: center;
 }
 
