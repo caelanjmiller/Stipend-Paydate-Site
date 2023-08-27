@@ -1,26 +1,30 @@
-import datetime
+from datetime import datetime
 from icalendar import Calendar, Event, vText
 import os
 import pandas as pd
 from pathlib import Path
+import bisect
+
 
 def retrieve_current_date() -> str:
     """Return current date in MM/DD/YYYY format"""
-    return datetime.datetime.now().strftime("%m/%d/%Y")
+    return datetime.now().strftime("%m/%d/%Y")
+
 
 def calendar_generation(paydate_dataframe):
-    paydate_dataframe.rename(columns={"Checks Released":"Released"})
+    paydate_dataframe.rename(columns={"Checks Released": "Released"})
     generated_calendar = Calendar()
-    generated_calendar.add('prodid', '-//WUSTL DBBS PhD Stipend Pay Dates//EN')
-    generated_calendar.add('version', '2.0')
+    generated_calendar.add("prodid", "-//WUSTL DBBS PhD Stipend Pay Dates//EN")
+    generated_calendar.add("version", "2.0")
     paydate_dict = dict(zip(paydate_dataframe.Month, paydate_dataframe.Released))
     for month, date in paydate_dict.items():
         calendar_event = Event()
-        calendar_event.add('name', f'{month} Stipend Pay Date')
-        calendar_event.add('description', f'WUSTL DBBS Stipend Pay Date for {month}')
-        calendar_event.add('dtstart', f'{date}')
-        calendar_event.add('dtend', f'{date}')
+        calendar_event.add("name", f"{month} Stipend Pay Date")
+        calendar_event.add("description", f"WUSTL DBBS Stipend Pay Date for {month}")
+        calendar_event.add("dtstart", f"{date}")
+        calendar_event.add("dtend", f"{date}")
         generated_calendar.add_component(calendar_event)
+
 
 def date_string_to_int(date: str, initial_format: str, desired_format: str):
     datetime_conversion = datetime.strptime(date, initial_format)
@@ -28,11 +32,17 @@ def date_string_to_int(date: str, initial_format: str, desired_format: str):
     return date_as_integer
 
 
-# def check_closest_paydate(paydate_dataframe, current_date):
-#     paydate_dataframe["Checks Released"] = pd.to_datetime(
-#         paydate_dataframe["Checks Released"]
-#     ).date()
-#     paydates_array = paydate_dataframe["Checks Released"].to_list()
-#     sorted_paydates_array = paydates_array.sort()
-#     for date in sorted_paydates_array:
-#         if current_date > date:
+def check_closest_paydate(paydate_dataframe, current_date_int: int):
+    int_dates_array = []
+    date_string_array = paydate_dataframe["Checks Released"].tolist()
+    for date in date_string_array:
+        int_date = date_string_to_int(date, "%m/%d/%Y", "%m%d%Y")
+        int_dates_array.append(int_date)
+    int_dates_array.sort()
+    print(int_dates_array)
+    paydate_index: int = bisect.bisect(int_dates_array, current_date_int)
+    next_pay_date_datetime = datetime.strptime(
+        str(int_dates_array[paydate_index]), "%m%d%Y"
+    ).date()
+    next_pay_date = next_pay_date_datetime.strftime("%m/%d/%Y")
+    return next_pay_date

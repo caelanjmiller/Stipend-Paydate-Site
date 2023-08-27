@@ -1,7 +1,7 @@
 from layout.components import *
 from dash import Dash, html, Input, Output
 from dash.exceptions import PreventUpdate
-from calendar_generation import retrieve_current_date
+from calendar_generation import *
 from scraping_utils import processed_excel_file
 
 dbc_css = "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.min.css"
@@ -39,18 +39,21 @@ app.layout = dbc.Container(
 )
 def update_date_header(n_clicks):
     current_date = retrieve_current_date()
+    current_date_int = date_string_to_int(current_date, "%m/%d/%Y", "%m%d%Y")
     paydate_dataframe = processed_excel_file
+    next_pay_date = check_closest_paydate(paydate_dataframe, current_date_int)
     if n_clicks is None:
         raise PreventUpdate
     else:
+
         result_component = html.Div(
             children=[
                 html.H1(
                     f"Today's Date: {current_date}", style={"text-align": "center"}
                 ),
-                # html.H2(
-                #     f"Next Pay Date: {next_paydate}", style={"text-align":"center"}
-                # ),
+                html.H2(
+                    f"Next Pay Date: {next_pay_date}", style={"text-align": "center"}
+                ),
                 dbc.Table.from_dataframe(
                     paydate_dataframe, striped=True, bordered=True, hover=True
                 ),
