@@ -2,7 +2,6 @@ from bs4 import BeautifulSoup
 import requests
 import pandas as pd
 import io
-from datetime import datetime
 
 
 def payroll_beautiful_parser(URL):
@@ -43,9 +42,6 @@ def excel_processing(excel_file: bytes, calendar_year: int):
     )  # Administration added wrong year for some dates; had to truncate & manually add years
     payroll_dataframe["Checks Released"] = (
         payroll_dataframe["Checks Released"] + f"/{str(calendar_year)}"
-    )
-    payroll_dataframe["Checks Released"] = pd.to_datetime(
-        payroll_dataframe["Checks Released"]
     )
     final_dataframe = (
         payroll_dataframe.drop(payroll_dataframe.columns[[0, 3, 4, 5]], axis=1)

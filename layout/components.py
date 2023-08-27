@@ -1,5 +1,5 @@
 import dash_bootstrap_components as dbc
-from dash import html, dcc
+from dash import html
 
 money_icon = html.I(className="fa-solid fa-sack-dollar fa-fw")
 
@@ -43,6 +43,7 @@ page_footer = dbc.Row(
 )
 
 site_nav = dbc.NavbarSimple(
+    id="navbar",
     children=[
         dbc.NavItem(dbc.NavLink("About", href="/about")),
     ],

@@ -48,6 +48,9 @@ def update_date_header(n_clicks):
                 html.H1(
                     f"Today's Date: {current_date}", style={"text-align": "center"}
                 ),
+                # html.H2(
+                #     f"Next Pay Date: {next_paydate}", style={"text-align":"center"}
+                # ),
                 dbc.Table.from_dataframe(
                     paydate_dataframe, striped=True, bordered=True, hover=True
                 ),
