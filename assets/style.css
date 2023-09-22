@@ -2,16 +2,62 @@
     box-sizing: border-box;
 }
 
-#page-footer{
-    background-color: #78c2ad;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1 rem;
+body {
+    padding-top: 4.063rem;
+}
+
+#main-container, #about-container {
+    overflow: hidden;
+}
+
+#navbar a:hover {
+    color: #e83e8c;
+}
+
+.jumbotron {
+    padding: 1%;
+    background-color: #e9ecef;
     text-align: center;
 }
 
+#body-content {
+    background-color: #fff;
+}
+
+#download-btn, #date-btn {
+    text-align: center;
+    border-radius: .40rem;
+    padding: .75rem 1.875rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+    margin: 1% auto;
+    width: fit-content;
+}
+
+#download-btn:hover, #date-btn:hover {
+    transform: scale(1.1);
+    background-color: #e9ecef;
+    color: black;
+}
+
+#page-footer{
+    font-size: 1 rem;
+    text-align: center;
+    position:fixed;
+    bottom:0px;
+    left:0px;
+    right:0px;
+    overflow: hidden;
+    margin:0;
+}
+
 #github-link {
-    color: white;
+    color: #e9ecef;
     text-decoration: none;
+}
+
+#github-link:hover {
+    color: #e83e8c;
 }

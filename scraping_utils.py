@@ -35,6 +35,9 @@ def excel_processing(excel_file: bytes, calendar_year: int):
         excel_file,
         skiprows=1,
     )
+    payroll_dataframe["Month"] = payroll_dataframe["Month"].replace(
+        "Setpember", "September"
+    )
     payroll_dataframe["Checks Released"] = payroll_dataframe[
         "Checks Released"
     ].dt.strftime(
