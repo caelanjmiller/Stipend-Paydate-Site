@@ -1,8 +1,5 @@
 from datetime import datetime
-from icalendar import Calendar, Event, vText
-import os
-import pandas as pd
-from pathlib import Path
+from ics import Calendar, Event
 import bisect
 
 
@@ -11,19 +8,26 @@ def retrieve_current_date() -> str:
     return datetime.now().strftime("%m/%d/%Y")
 
 
+def date_string_to_datetime(date: str, initial_format: str):
+    datetime_conversion = datetime.strptime(date, initial_format)
+    return datetime_conversion
+
+
 def calendar_generation(paydate_dataframe):
-    paydate_dataframe.rename(columns={"Checks Released": "Released"})
     generated_calendar = Calendar()
-    generated_calendar.add("prodid", "-//WUSTL DBBS PhD Stipend Pay Dates//EN")
-    generated_calendar.add("version", "2.0")
-    paydate_dict = dict(zip(paydate_dataframe.Month, paydate_dataframe.Released))
+    paydate_dict = dict(
+        zip(paydate_dataframe["Month"], paydate_dataframe["Checks Released"])
+    )
     for month, date in paydate_dict.items():
+        event_date_start = datetime.strptime(date, "%m/%d/%Y").date()
         calendar_event = Event()
-        calendar_event.add("name", f"{month} Stipend Pay Date")
-        calendar_event.add("description", f"WUSTL DBBS Stipend Pay Date for {month}")
-        calendar_event.add("dtstart", f"{date}")
-        calendar_event.add("dtend", f"{date}")
-        generated_calendar.add_component(calendar_event)
+        calendar_event.name =  f"{month} Stipend Pay Date"
+        calendar_event.description = f"WUSTL DBBS Stipend Pay Date for {month}"
+        calendar_event.begin = event_date_start
+        calendar_event.make_all_day()
+        generated_calendar.events.add(calendar_event)
+    final_calendar = generated_calendar.serialize()
+    return final_calendar
 
 
 def date_string_to_int(date: str, initial_format: str, desired_format: str):
@@ -39,7 +43,6 @@ def check_closest_paydate(paydate_dataframe, current_date_int: int):
         int_date = date_string_to_int(date, "%m/%d/%Y", "%m%d%Y")
         int_dates_array.append(int_date)
     int_dates_array.sort()
-    print(int_dates_array)
     paydate_index: int = bisect.bisect(int_dates_array, current_date_int)
     next_pay_date_datetime = datetime.strptime(
         str(int_dates_array[paydate_index]), "%m%d%Y"

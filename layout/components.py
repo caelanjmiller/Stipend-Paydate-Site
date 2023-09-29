@@ -2,14 +2,13 @@ import dash_bootstrap_components as dbc
 from dash import html
 
 money_sack_icon = html.I(className="fa-solid fa-sack-dollar fa-fw")
-dollar_icon = html.I(className="fa-solid fa-dollar-sign")
+dollar_icon = html.I(className="fa-solid fa-dollar-sign", style={"margin":".15rem"})
 calendar_icon = html.I(className="fa-solid fa-calendar fa-fw")
 email_icon = html.I(className="fa-solid fa-inbox fa-fw")
 
 download_calendar_button = dbc.Col(
     children=[
         dbc.Button(
-            className="d-grid gap-2 mx-auto",
             color="dark",
             id="download-btn",
             children=[
@@ -26,9 +25,8 @@ date_query_button = dbc.Row(
         dbc.Col(
             children=[
                 dbc.Button(
-                    children=["Click For Stipend Next Pay Date", dollar_icon],
+                    children=[dollar_icon, dollar_icon, dollar_icon],
                     color="dark",
-                    className="d-grid gap-2 mx-auto",
                     id="date-btn",
                 ),
             ]

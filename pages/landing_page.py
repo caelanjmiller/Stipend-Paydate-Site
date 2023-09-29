@@ -63,10 +63,8 @@ def update_body_content(n_clicks):
 )
 def download_generated_calendar(n_clicks):
     paydate_dataframe = processed_excel_file
-    final_calendar = calendar_generation(paydate_dataframe)
     if n_clicks is None:
         raise PreventUpdate
     else:
-        print(final_calendar.to_ical().decode("utf-8"))
-        # return dict(content=final_calendar, filename="stipend_paydates.ics")
-        return
+        final_calendar = calendar_generation(paydate_dataframe)
+        return dict(content=final_calendar, filename="stipend_paydates.ics")
