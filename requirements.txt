@@ -1,0 +1,7 @@
+dash==2.13.0
+dash-bootstrap-components
+gunicorn
+ics
+pandas
+beautifulsoup4
+requests

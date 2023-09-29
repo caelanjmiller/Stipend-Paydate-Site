@@ -21,7 +21,7 @@ def calendar_generation(paydate_dataframe):
     for month, date in paydate_dict.items():
         event_date_start = datetime.strptime(date, "%m/%d/%Y").date()
         calendar_event = Event()
-        calendar_event.name =  f"{month} Stipend Pay Date"
+        calendar_event.name = f"{month} Stipend Pay Date"
         calendar_event.description = f"WUSTL DBBS Stipend Pay Date for {month}"
         calendar_event.begin = event_date_start
         calendar_event.make_all_day()

@@ -2,7 +2,7 @@ import dash_bootstrap_components as dbc
 from dash import html
 
 money_sack_icon = html.I(className="fa-solid fa-sack-dollar fa-fw")
-dollar_icon = html.I(className="fa-solid fa-dollar-sign", style={"margin":".15rem"})
+dollar_icon = html.I(className="fa-solid fa-dollar-sign", style={"margin": ".15rem"})
 calendar_icon = html.I(className="fa-solid fa-calendar fa-fw")
 email_icon = html.I(className="fa-solid fa-inbox fa-fw")
 
@@ -78,7 +78,7 @@ site_nav = dbc.NavbarSimple(
         dbc.NavItem(
             dbc.NavLink(
                 "Repo",
-                href="https://github.com/caelanjmiller/When_Is_Pay_Date_WUSTL_PhD",
+                href="https://github.com/caelanjmiller/Stipend-Paydate-Site",
                 external_link=True,
             )
         ),
@@ -94,10 +94,14 @@ site_nav = dbc.NavbarSimple(
 site_jumbotron = dbc.Container(
     className="jumbotron",
     children=[
-        html.Div(children=[
-            html.H4("📅💰 Want to Know When Your Next Stipend Check Is?"),
-            html.P("Click to Find Out Next Pay Date and Download Calendar for Schedule"),
-        ])
+        html.Div(
+            children=[
+                html.H4("📅💰 Want to Know When Your Next Stipend Check Is?"),
+                html.P(
+                    "Click to Find Out Next Pay Date and Download Calendar for Schedule"
+                ),
+            ]
+        )
     ],
 )
 
