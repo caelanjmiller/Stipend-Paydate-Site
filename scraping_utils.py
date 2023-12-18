@@ -11,9 +11,9 @@ def payroll_beautiful_parser(URL):
     return parsed_payroll_html
 
 
-def anchor_tag_URL_extraction(parsed_html_webpage) -> str:
+def anchor_tag_URL_extraction(parsed_html_webpage):
     """Extract URL from anchor tags on WUSTL Payroll Site with .xlsx content"""
-    payroll_dates_excel_url: str = None
+    payroll_dates_excel_url = None
     for anchor in parsed_html_webpage.find_all("a"):
         if str(anchor.get("href")).endswith(".xlsx"):
             payroll_dates_excel_url = anchor.get("href")
@@ -23,13 +23,13 @@ def anchor_tag_URL_extraction(parsed_html_webpage) -> str:
     return payroll_dates_excel_url
 
 
-def excel_extraction_from_URL(excel_url: str) -> bytes:
+def excel_extraction_from_URL(excel_url):
     """Extract Excel file from URL & convert to in-memory binary stream"""
-    excel_file: bytes = io.BytesIO(requests.get(excel_url).content)
+    excel_file = io.BytesIO(requests.get(excel_url).content)
     return excel_file
 
 
-def excel_processing(excel_file: bytes, calendar_year: int):
+def excel_processing(excel_file, calendar_year: int):
     """Process Excel File (.xlsx) for Payable Dates"""
     payroll_dataframe = pd.read_excel(
         excel_file,
