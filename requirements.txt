@@ -4,6 +4,6 @@ gunicorn
 ics
 pandas
 beautifulsoup4
-requests
 openpyxl
 numpy
+camelot

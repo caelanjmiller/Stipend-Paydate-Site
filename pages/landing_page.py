@@ -8,7 +8,7 @@ from layout.components import (
     page_footer,
 )
 from calendar_generation import *
-from scraping_utils import processed_excel_file
+from scraping_utils import processed_dataframe
 from dash.exceptions import PreventUpdate
 
 
@@ -33,7 +33,7 @@ layout = dbc.Container(
 def update_body_content(n_clicks):
     current_date = retrieve_current_date()
     current_date_int = date_string_to_int(current_date, "%m/%d/%Y", "%m%d%Y")
-    paydate_dataframe = processed_excel_file
+    paydate_dataframe = processed_dataframe
     next_pay_date = check_closest_paydate(paydate_dataframe, current_date_int)
     if n_clicks is None:
         raise PreventUpdate
@@ -47,7 +47,7 @@ def update_body_content(n_clicks):
                     f"Next Pay Date: {next_pay_date}",
                     style={"text-align": "center", "color": "#e83e8c"},
                 ),
-                dbc.Table.from_dataframe(
+                dbc.Table.from_dataframe( # type: ignore
                     paydate_dataframe, striped=True, bordered=True, hover=True
                 ),
                 download_calendar_button,
@@ -62,7 +62,7 @@ def update_body_content(n_clicks):
     prevent_initial_call=True,
 )
 def download_generated_calendar(n_clicks):
-    paydate_dataframe = processed_excel_file
+    paydate_dataframe = processed_dataframe
     if n_clicks is None:
         raise PreventUpdate
     else:

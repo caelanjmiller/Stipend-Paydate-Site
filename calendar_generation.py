@@ -23,7 +23,7 @@ def calendar_generation(paydate_dataframe):
         calendar_event = Event()
         calendar_event.name = f"{month} Stipend Pay Date"
         calendar_event.description = f"WUSTL DBBS Stipend Pay Date for {month}"
-        calendar_event.begin = event_date_start # type: ignore
+        calendar_event.begin = event_date_start  # type: ignore
         calendar_event.make_all_day()
         generated_calendar.events.add(calendar_event)
     final_calendar = generated_calendar.serialize()

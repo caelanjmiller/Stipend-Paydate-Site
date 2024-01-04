@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
 import requests
 import pandas as pd
-import io
+import camelot
 
 
 def payroll_beautiful_parser(URL):
@@ -11,48 +11,53 @@ def payroll_beautiful_parser(URL):
     return parsed_payroll_html
 
 
-def anchor_tag_URL_extraction(parsed_html_webpage):
-    """Extract URL from anchor tags on WUSTL Payroll Site with .xlsx content"""
-    payroll_dates_excel_url = None
+def anchor_tag_URL_extraction(parsed_html_webpage, year: str):
+    """Extract URL from anchor tags on WUSTL Payroll Site with PDF content"""
+    payroll_dates_pdf_url = ""
     for anchor in parsed_html_webpage.find_all("a"):
-        if str(anchor.get("href")).endswith(".xlsx"):
-            payroll_dates_excel_url = anchor.get("href")
-            break
+        if (
+            f"{year} Payroll Processing" in anchor.text
+        ):  # Filter Specifically for Year of Interest
+            if str(anchor.get("href")).endswith(".pdf"):
+                payroll_dates_pdf_url = anchor.get("href")
+                break
         else:
             continue
-    return payroll_dates_excel_url
+    return payroll_dates_pdf_url
 
 
-def excel_extraction_from_URL(excel_url):
-    """Extract Excel file from URL & convert to in-memory binary stream"""
-    excel_file = io.BytesIO(requests.get(excel_url).content)
-    return excel_file
-
-
-def excel_processing(excel_file, calendar_year: int):
-    """Process Excel File (.xlsx) for Payable Dates"""
-    payroll_dataframe = pd.read_excel(
-        excel_file,
-        skiprows=1,
+def pdf_to_dataframe_processing(pdf_file, calendar_year: int):
+    """Process PDF File (.pdf) for Pay Dates"""
+    pdf_tables = camelot.read_pdf(pdf_file, pages="1,2")  # Two pages worth of pay dates
+    table_one_dataframe = pdf_tables[0].df  # Convert Camelot object from PDF page 1 into dataframe
+    table_two_dataframe = pdf_tables[1].df
+    table_one_dataframe = table_one_dataframe.rename(
+        columns=table_one_dataframe.iloc[0]
+    )  # Set Column Header Names From 1st Row Values
+    table_two_dataframe = table_two_dataframe.rename(
+        columns=table_two_dataframe.iloc[0]
     )
-    payroll_dataframe["Month"] = payroll_dataframe["Month"].replace(
-        "Setpember", "September"
+    table_one_dataframe = (
+        table_one_dataframe.drop(
+            list(table_one_dataframe)[1:8], axis=1
+        )  # Drop all rows from position 1 up to but not include position 8
+        .dropna(axis=0)
+        .query("`P/R` == 'MON/STP'")
+        .reset_index(drop=True)
     )
-    payroll_dataframe["Checks Released"] = payroll_dataframe[
-        "Checks Released"
-    ].dt.strftime(
-        "%m/%d"
-    )  # Administration added wrong year for some dates; had to truncate & manually add years
+    table_two_dataframe = (
+        table_two_dataframe.drop(list(table_two_dataframe)[1:8], axis=1)
+        .dropna(axis=0)
+        .query("`P/R` == 'MON/STP'")
+        .reset_index(drop=True)
+    )
+    payroll_dataframe = pd.concat(
+        [table_one_dataframe, table_two_dataframe], ignore_index=True
+    ).rename(columns={"P/R": "Payroll Type", "Pay Date": "Checks Released"})
     payroll_dataframe["Checks Released"] = (
         payroll_dataframe["Checks Released"] + f"/{str(calendar_year)}"
     )
-    final_dataframe = (
-        payroll_dataframe.drop(payroll_dataframe.columns[[0, 3, 4, 5]], axis=1)
-        .dropna(axis=0)
-        .query("`Payroll Type` == 'MON/STP'")
-        .reset_index(drop=True)
-    )
-    return final_dataframe
+    return payroll_dataframe
 
 
 PAYROLL_URL: str = (
@@ -60,6 +65,5 @@ PAYROLL_URL: str = (
 )
 
 parsed_html = payroll_beautiful_parser(PAYROLL_URL)
-payroll_excel_url = anchor_tag_URL_extraction(parsed_html)
-initial_payroll_excel_file = excel_extraction_from_URL(payroll_excel_url)
-processed_excel_file = excel_processing(initial_payroll_excel_file, 2023)
+payroll_pdf_url = anchor_tag_URL_extraction(parsed_html, "2024")
+processed_dataframe = pdf_to_dataframe_processing(payroll_pdf_url, 2024)
