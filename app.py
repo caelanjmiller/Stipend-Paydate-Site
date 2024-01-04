@@ -21,7 +21,7 @@ app.layout = dbc.Container(
 )
 
 # Development Testing
-if __name__ == "__main__":
-    app.run(debug=True)
+# if __name__ == "__main__":
+#     app.run(debug=True)
 
 # Author: Caelan Miller - 2023
