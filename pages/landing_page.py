@@ -47,7 +47,7 @@ def update_body_content(n_clicks):
                     f"Next Pay Date: {next_pay_date}",
                     style={"text-align": "center", "color": "#e83e8c"},
                 ),
-                dbc.Table.from_dataframe( # type: ignore
+                dbc.Table.from_dataframe(  # type: ignore
                     paydate_dataframe, striped=True, bordered=True, hover=True
                 ),
                 download_calendar_button,

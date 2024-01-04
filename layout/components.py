@@ -116,7 +116,7 @@ about_page_content = dbc.Row(
             children=[
                 html.H2("About this Site", style={"text-align": "center"}),
                 html.P(
-                    "Hi I am Caelan Miller and a first year PhD student in the WUSTL DBBS Molecular Microbiology & Microbial Pathogenesis Program. I was tired of having to check the WUSTL Finance website for pay dates and having to manually add dates to my calendar. I definitely spent more time coding this site but I chose to create it as both an exercise for myself and a resource for other DBBS PhD students!"
+                    "Hi I am Caelan Miller and a first year PhD student in the WUSTL DBBS Computational & Systems Biology Program. I was tired of having to check the WUSTL Finance website for pay dates and having to manually add dates to my calendar. I definitely spent more time coding this site but I chose to create it as both an exercise for myself and a resource for other DBBS PhD students!"
                 ),
             ]
         ),

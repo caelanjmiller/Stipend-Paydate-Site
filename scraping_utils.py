@@ -57,6 +57,12 @@ def pdf_to_dataframe_processing(pdf_file, calendar_year: int):
     payroll_dataframe["Checks Released"] = (
         payroll_dataframe["Checks Released"] + f"/{str(calendar_year)}"
     )
+    payroll_dataframe["Month"] = pd.to_datetime(
+        payroll_dataframe["Checks Released"]
+    ).dt.strftime(
+        "%B"
+    )  # Create Month Column
+    payroll_dataframe = payroll_dataframe[["Month", "Payroll Type", "Checks Released"]]
     return payroll_dataframe
 
 
