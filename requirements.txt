@@ -6,4 +6,4 @@ pandas
 beautifulsoup4
 openpyxl
 numpy
-camelot
+camelot-py[cv]
