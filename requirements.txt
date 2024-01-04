@@ -1,9 +1,8 @@
-dash==2.13.0
+dash
 dash-bootstrap-components
 gunicorn
 ics
 pandas
 beautifulsoup4
-openpyxl
 numpy
 camelot-py[cv]
